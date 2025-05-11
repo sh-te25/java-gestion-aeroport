@@ -38,10 +38,21 @@ public class AgentFrame extends JFrame {
         JButton afficherReclamationsBtn = new JButton("Voir les réclamations");
         afficherReclamationsBtn.addActionListener(e -> voirReclamations());
 
-        JPanel top = new JPanel();
+        JButton supprimerReclamationBtn = new JButton("Supprimer une réclamation");
+        supprimerReclamationBtn.addActionListener(e -> supprimerReclamation());
+
+        JButton modifierReclamationBtn = new JButton("Modifier une réclamation");
+        modifierReclamationBtn.addActionListener(e -> modifierReclamation());
+
+
+
+
+        JPanel top = new JPanel(new GridLayout(3, 2, 5, 5));
         top.add(creerVolBtn);
         top.add(creerReclamationBtn);
         top.add(afficherReclamationsBtn);
+        top.add(supprimerReclamationBtn);
+        top.add(modifierReclamationBtn);
         add(top, BorderLayout.NORTH);
 
         // === Liste des vols ===
@@ -153,4 +164,87 @@ public class AgentFrame extends JFrame {
                 "Réclamations",
                 JOptionPane.INFORMATION_MESSAGE);
     }
+
+    private void supprimerReclamation() {
+        if (manager.getVols().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Aucun vol disponible.");
+            return;
+        }
+
+        Vol vol = (Vol) JOptionPane.showInputDialog(
+                this,
+                "Choisissez un vol :",
+                "Vol",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                manager.getVols().toArray(),
+                null
+        );
+
+        if (vol == null) return;
+
+        if (vol.getReclamations().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Aucune réclamation pour ce vol.");
+            return;
+        }
+
+        Reclamation reclamation = (Reclamation) JOptionPane.showInputDialog(
+                this,
+                "Choisissez la réclamation à supprimer :",
+                "Supprimer réclamation",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                vol.getReclamations().toArray(),
+                null
+        );
+
+        if (reclamation == null) return;
+
+        vol.getReclamations().remove(reclamation);
+        JOptionPane.showMessageDialog(this, "Réclamation supprimée.");
+    }
+
+    private void modifierReclamation() {
+
+            if (manager.getVols().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Aucun vol disponible.");
+                return;
+            }
+
+            Vol vol = (Vol) JOptionPane.showInputDialog(
+                    this,
+                    "Choisissez un vol :",
+                    "Vol",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    manager.getVols().toArray(),
+                    null
+            );
+
+            if (vol == null) return;
+
+            if (vol.getReclamations().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Aucune réclamation pour ce vol.");
+                return;
+            }
+
+            Reclamation reclamation = (Reclamation) JOptionPane.showInputDialog(
+                    this,
+                    "Choisissez la réclamation à modifier :",
+                    "Modifier réclamation",
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    vol.getReclamations().toArray(),
+                    null
+            );
+
+            if (reclamation == null) return;
+
+            String nouveauContenu = JOptionPane.showInputDialog(this, "Nouveau contenu :", reclamation.getContenu());
+            if (nouveauContenu == null || nouveauContenu.isBlank()) return;
+
+            reclamation.setContenu(nouveauContenu.trim());
+            JOptionPane.showMessageDialog(this, "Réclamation modifiée.");
+        }
+
 }

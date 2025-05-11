@@ -15,4 +15,8 @@ public class Reclamation {
     public String toString() {
         return "Réclamation: " + contenu;
     }
+
+    public void setContenu(String contenu) {
+        this.contenu = contenu;
+    }
 }

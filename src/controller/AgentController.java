@@ -25,6 +25,8 @@ public class AgentController {
             System.out.println("2. Voir tous les vols");
             System.out.println("3. Créer une réclamation");
             System.out.println("4. Voir les réclamations");
+            System.out.println("5. Supprimer une réclamation");
+            System.out.println("6. Modifier une réclamation");
             System.out.println("0. Quitter");
             System.out.print("Votre choix : ");
             choix = Integer.parseInt(scanner.nextLine());
@@ -41,6 +43,12 @@ public class AgentController {
                     break;
                 case 4:
                     afficherReclamations();
+                    break;
+                case 5:
+                    supprimerReclamation();
+                    break;
+                case 6:
+                    modifierReclamation();
                     break;
                 case 0:
                     System.out.println("Déconnexion...");
@@ -138,4 +146,71 @@ public class AgentController {
             System.out.println("- " + r);
         }
     }
+
+
+    private void supprimerReclamation()
+    {
+        if (manager.getVols().isEmpty()) {
+            System.out.println("Aucun vol disponible.");
+            return;
+        }
+
+        System.out.println("Sélectionnez un vol :");
+        for (int i = 0; i < manager.getVols().size(); i++) {
+            System.out.println(i + ". " + manager.getVols().get(i));
+        }
+        int choixVol = Integer.parseInt(scanner.nextLine());
+        Vol vol = manager.getVols().get(choixVol);
+
+        if (vol.getReclamations().isEmpty()) {
+            System.out.println("Aucune réclamation pour ce vol.");
+            return;
+        }
+
+        System.out.println("Sélectionnez la réclamation à supprimer :");
+        for (int i = 0; i < vol.getReclamations().size(); i++) {
+            System.out.println(i + ". " + vol.getReclamations().get(i));
+        }
+        int choixReclamation = Integer.parseInt(scanner.nextLine());
+        Reclamation reclamation = vol.getReclamations().get(choixReclamation);
+
+        vol.getReclamations().remove(reclamation);
+        System.out.println("Réclamation supprimée avec succès.");
+
+    }
+    private void modifierReclamation() {
+        if (manager.getVols().isEmpty()) {
+            System.out.println("Aucun vol disponible.");
+            return;
+        }
+
+        System.out.println("Sélectionnez un vol :");
+        for (int i = 0; i < manager.getVols().size(); i++) {
+            System.out.println(i + ". " + manager.getVols().get(i));
+        }
+        int choixVol = Integer.parseInt(scanner.nextLine());
+        Vol vol = manager.getVols().get(choixVol);
+
+        if (vol.getReclamations().isEmpty()) {
+            System.out.println("Aucune réclamation pour ce vol.");
+            return;
+        }
+
+        System.out.println("Sélectionnez la réclamation à modifier :");
+        for (int i = 0; i < vol.getReclamations().size(); i++) {
+            System.out.println(i + ". " + vol.getReclamations().get(i).getContenu());
+        }
+        int choixRec = Integer.parseInt(scanner.nextLine());
+        Reclamation reclamation = vol.getReclamations().get(choixRec);
+
+        System.out.print("Nouveau contenu de la réclamation : ");
+        String nouveauContenu = scanner.nextLine();
+
+        reclamation.setContenu(nouveauContenu.trim());
+        System.out.println("Réclamation modifiée avec succès.");
+    }
+
+
+
+
 }
