@@ -1,7 +1,8 @@
 package ui.swing;
 
-import compagnie.CompagnieAerienne;
+import auth.*;
 import gestion.*;
+import compagnie.CompagnieAerienne;
 import moyens.Pave;
 
 import javax.swing.*;
@@ -9,15 +10,17 @@ import java.awt.*;
 
 public class AdminFrame extends JFrame {
     private AeroportManager manager;
+    private LoginService loginService;
     private DefaultListModel<String> compagnieModel;
     private DefaultListModel<String> pisteModel;
 
     public AdminFrame() {
         super("Menu Administrateur");
         this.manager = Session.getManager();
+        this.loginService = Session.getLoginService();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(500, 400);
+        setSize(600, 450);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -26,19 +29,23 @@ public class AdminFrame extends JFrame {
     }
 
     private void initComponents() {
-        // === Boutons du haut ===
+        // === Boutons d'action ===
         JButton ajouterCompagnie = new JButton("Ajouter une compagnie");
         ajouterCompagnie.addActionListener(e -> ajouterCompagnie());
 
         JButton ajouterPiste = new JButton("Ajouter une piste");
         ajouterPiste.addActionListener(e -> ajouterPiste());
 
+        JButton ajouterUtilisateur = new JButton("Ajouter un utilisateur");
+        ajouterUtilisateur.addActionListener(e -> ajouterUtilisateur());
+
         JPanel topPanel = new JPanel();
         topPanel.add(ajouterCompagnie);
         topPanel.add(ajouterPiste);
+        topPanel.add(ajouterUtilisateur);
         add(topPanel, BorderLayout.NORTH);
 
-        // === Listes ===
+        // === Listes compagnies et pistes ===
         compagnieModel = new DefaultListModel<>();
         JList<String> compagnieList = new JList<>(compagnieModel);
         JScrollPane compagnieScroll = new JScrollPane(compagnieList);
@@ -54,7 +61,7 @@ public class AdminFrame extends JFrame {
         centerPanel.add(pisteScroll);
         add(centerPanel, BorderLayout.CENTER);
 
-        // === Bouton de déconnexion ===
+        // === Déconnexion ===
         JButton logoutBtn = new JButton("Déconnexion");
         logoutBtn.addActionListener(e -> {
             dispose();
@@ -81,5 +88,30 @@ public class AdminFrame extends JFrame {
             pisteModel.addElement(id.trim());
         }
     }
+
+    private void ajouterUtilisateur() {
+        String identifiant = JOptionPane.showInputDialog(this, "Identifiant :");
+        if (identifiant == null || identifiant.isBlank()) return;
+
+        String motDePasse = JOptionPane.showInputDialog(this, "Mot de passe :");
+        if (motDePasse == null || motDePasse.isBlank()) return;
+
+        String[] roles = {"Admin", "Agent", "Bagagiste", "Technicien"};
+        String role = (String) JOptionPane.showInputDialog(
+                this,
+                "Choisissez un rôle :",
+                "Rôle",
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                roles,
+                roles[0]
+        );
+
+        if (role == null) return;
+
+        loginService.ajouterUtilisateur(identifiant.trim(), motDePasse.trim(), role);
+        JOptionPane.showMessageDialog(this, "Utilisateur ajouté avec succès.");
+    }
 }
+
 
