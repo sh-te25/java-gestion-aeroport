@@ -2,11 +2,10 @@ package ui.swing;
 
 import auth.LoginService;
 import auth.Utilisateur;
-import employe.Admin;
 import employe.Agent;
 import employe.Bagagiste;
 import employe.Technicien;
-import gestion.AeroportManager;
+import gestion.Session;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,12 +15,10 @@ public class LoginFrame extends JFrame {
     private JPasswordField motDePasseField;
     private JButton connexionButton;
     private LoginService loginService;
-    private AeroportManager manager;
 
     public LoginFrame() {
         super("Connexion");
         this.loginService = new LoginService();
-        this.manager = new AeroportManager();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(350, 200);
@@ -50,7 +47,7 @@ public class LoginFrame extends JFrame {
         panel.add(identifiantField);
         panel.add(mdpLabel);
         panel.add(motDePasseField);
-        panel.add(new JLabel()); // vide
+        panel.add(new JLabel()); // cellule vide
         panel.add(connexionButton);
 
         add(panel, BorderLayout.CENTER);
@@ -63,23 +60,21 @@ public class LoginFrame extends JFrame {
         Utilisateur u = loginService.connecter(login, mdp);
         if (u != null) {
             JOptionPane.showMessageDialog(this, "Bienvenue, " + u.getRole() + "!");
-            this.dispose();
+            dispose();
 
             switch (u.getRole()) {
                 case "Admin":
-                    new AdminFrame(manager);
+                    new AdminFrame();
                     break;
                 case "Agent":
-                    Agent agent = new Agent(u.getIdentifiant(), u.getIdentifiant(), u.getMotDePasse());
-                    new AgentFrame(manager);
+                    new AgentFrame();
                     break;
                 case "Technicien":
                     Technicien technicien = new Technicien(u.getIdentifiant(), u.getIdentifiant(), u.getMotDePasse());
-                    new TechnicienFrame(manager, technicien);
+                    new TechnicienFrame(technicien);
                     break;
                 case "Bagagiste":
-                    Bagagiste bagagiste = new Bagagiste(u.getIdentifiant(), u.getIdentifiant(), u.getMotDePasse());
-                    new BagagisteFrame(manager);
+                    new BagagisteFrame();
                     break;
                 default:
                     JOptionPane.showMessageDialog(this, "Rôle non reconnu.");

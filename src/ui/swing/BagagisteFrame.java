@@ -1,7 +1,7 @@
 package ui.swing;
 
 import compagnie.Vol;
-import gestion.AeroportManager;
+import gestion.*;
 import moyens.Bagage;
 
 import javax.swing.*;
@@ -10,28 +10,42 @@ import java.awt.*;
 public class BagagisteFrame extends JFrame {
     private AeroportManager manager;
 
-    public BagagisteFrame(AeroportManager manager) {
+    public BagagisteFrame() {
         super("Menu Bagagiste");
-        this.manager = manager;
+        this.manager = Session.getManager();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 300);
         setLocationRelativeTo(null);
-        setLayout(new FlowLayout());
+        setLayout(new BorderLayout());
 
         initComponents();
         setVisible(true);
     }
 
     private void initComponents() {
+        // === Boutons d’action ===
         JButton ajouterBagage = new JButton("Ajouter un bagage");
         ajouterBagage.addActionListener(e -> ajouterBagage());
 
         JButton voirBagages = new JButton("Voir les bagages d’un vol");
         voirBagages.addActionListener(e -> voirBagages());
 
-        add(ajouterBagage);
-        add(voirBagages);
+        JPanel topPanel = new JPanel();
+        topPanel.add(ajouterBagage);
+        topPanel.add(voirBagages);
+        add(topPanel, BorderLayout.NORTH);
+
+        // === Bouton de déconnexion ===
+        JButton logoutBtn = new JButton("Déconnexion");
+        logoutBtn.addActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(LoginFrame::new);
+        });
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(logoutBtn);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void ajouterBagage() {

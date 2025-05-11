@@ -3,6 +3,7 @@ package ui.swing;
 import compagnie.Vol;
 import compagnie.CompagnieAerienne;
 import gestion.AeroportManager;
+import gestion.Session;
 import moyens.Pave;
 import moyens.Reclamation;
 
@@ -13,12 +14,12 @@ public class AgentFrame extends JFrame {
     private AeroportManager manager;
     private DefaultListModel<String> volsModel;
 
-    public AgentFrame(AeroportManager manager) {
+    public AgentFrame() {
         super("Menu Agent de planification");
-        this.manager = manager;
+        this.manager = Session.getManager();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 450);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -27,6 +28,7 @@ public class AgentFrame extends JFrame {
     }
 
     private void initComponents() {
+        // === Boutons d’action ===
         JButton creerVolBtn = new JButton("Créer un vol");
         creerVolBtn.addActionListener(e -> creerVol());
 
@@ -42,11 +44,23 @@ public class AgentFrame extends JFrame {
         top.add(afficherReclamationsBtn);
         add(top, BorderLayout.NORTH);
 
+        // === Liste des vols ===
         volsModel = new DefaultListModel<>();
         JList<String> liste = new JList<>(volsModel);
         JScrollPane scroll = new JScrollPane(liste);
         scroll.setBorder(BorderFactory.createTitledBorder("Vols créés"));
         add(scroll, BorderLayout.CENTER);
+
+        // === Bouton de déconnexion ===
+        JButton logoutBtn = new JButton("Déconnexion");
+        logoutBtn.addActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(LoginFrame::new);
+        });
+
+        JPanel bottom = new JPanel();
+        bottom.add(logoutBtn);
+        add(bottom, BorderLayout.SOUTH);
     }
 
     private void creerVol() {

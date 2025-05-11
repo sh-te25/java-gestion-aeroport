@@ -1,7 +1,7 @@
 package ui.swing;
 
 import employe.Technicien;
-import gestion.AeroportManager;
+import gestion.*;
 import moyens.Avion;
 
 import javax.swing.*;
@@ -12,9 +12,9 @@ public class TechnicienFrame extends JFrame {
     private Technicien technicien;
     private DefaultListModel<String> avionsModel;
 
-    public TechnicienFrame(AeroportManager manager, Technicien technicien) {
+    public TechnicienFrame(Technicien technicien) {
         super("Menu Technicien");
-        this.manager = manager;
+        this.manager = Session.getManager();
         this.technicien = technicien;
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -27,6 +27,7 @@ public class TechnicienFrame extends JFrame {
     }
 
     private void initComponents() {
+        // === Bouton pour ajouter un avion ===
         JButton ajouterAvion = new JButton("Ajouter un avion");
         ajouterAvion.addActionListener(e -> ajouterAvion());
 
@@ -34,6 +35,7 @@ public class TechnicienFrame extends JFrame {
         topPanel.add(ajouterAvion);
         add(topPanel, BorderLayout.NORTH);
 
+        // === Liste des avions ===
         avionsModel = new DefaultListModel<>();
         JList<String> avionList = new JList<>(avionsModel);
         JScrollPane scroll = new JScrollPane(avionList);
@@ -41,6 +43,17 @@ public class TechnicienFrame extends JFrame {
         add(scroll, BorderLayout.CENTER);
 
         rafraichirAvions();
+
+        // === Bouton de déconnexion ===
+        JButton logoutBtn = new JButton("Déconnexion");
+        logoutBtn.addActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(LoginFrame::new);
+        });
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(logoutBtn);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void ajouterAvion() {

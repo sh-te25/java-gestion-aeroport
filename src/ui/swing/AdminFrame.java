@@ -1,7 +1,7 @@
 package ui.swing;
 
 import compagnie.CompagnieAerienne;
-import gestion.AeroportManager;
+import gestion.*;
 import moyens.Pave;
 
 import javax.swing.*;
@@ -12,9 +12,9 @@ public class AdminFrame extends JFrame {
     private DefaultListModel<String> compagnieModel;
     private DefaultListModel<String> pisteModel;
 
-    public AdminFrame(AeroportManager manager) {
+    public AdminFrame() {
         super("Menu Administrateur");
-        this.manager = manager;
+        this.manager = Session.getManager();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(500, 400);
@@ -22,12 +22,11 @@ public class AdminFrame extends JFrame {
         setLayout(new BorderLayout());
 
         initComponents();
-
         setVisible(true);
     }
 
     private void initComponents() {
-        // === Boutons ===
+        // === Boutons du haut ===
         JButton ajouterCompagnie = new JButton("Ajouter une compagnie");
         ajouterCompagnie.addActionListener(e -> ajouterCompagnie());
 
@@ -54,6 +53,17 @@ public class AdminFrame extends JFrame {
         centerPanel.add(compagnieScroll);
         centerPanel.add(pisteScroll);
         add(centerPanel, BorderLayout.CENTER);
+
+        // === Bouton de déconnexion ===
+        JButton logoutBtn = new JButton("Déconnexion");
+        logoutBtn.addActionListener(e -> {
+            dispose();
+            SwingUtilities.invokeLater(LoginFrame::new);
+        });
+
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.add(logoutBtn);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void ajouterCompagnie() {
@@ -72,3 +82,4 @@ public class AdminFrame extends JFrame {
         }
     }
 }
+
