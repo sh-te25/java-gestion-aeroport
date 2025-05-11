@@ -18,7 +18,8 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() {
         super("Connexion");
-        this.loginService = new LoginService();
+
+        this.loginService = Session.getLoginService();  // ⚠️ UTILISATION PARTAGÉE
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(350, 200);
@@ -47,7 +48,7 @@ public class LoginFrame extends JFrame {
         panel.add(identifiantField);
         panel.add(mdpLabel);
         panel.add(motDePasseField);
-        panel.add(new JLabel()); // cellule vide
+        panel.add(new JLabel()); // vide
         panel.add(connexionButton);
 
         add(panel, BorderLayout.CENTER);
@@ -84,4 +85,3 @@ public class LoginFrame extends JFrame {
         }
     }
 }
-

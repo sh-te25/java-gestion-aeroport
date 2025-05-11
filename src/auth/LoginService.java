@@ -9,7 +9,7 @@ public class LoginService {
     public LoginService() {
         utilisateurs = new ArrayList<>();
 
-        // Comptes prédéfinis pour les tests (à adapter si besoin)
+        // Utilisateurs par défaut
         utilisateurs.add(new Utilisateur("admin1", "adminpass", "Admin"));
         utilisateurs.add(new Utilisateur("agent1", "agentpass", "Agent"));
         utilisateurs.add(new Utilisateur("bagagiste1", "bagagepass", "Bagagiste"));
@@ -17,10 +17,7 @@ public class LoginService {
     }
 
     /**
-     * Tente d’authentifier un utilisateur par identifiant et mot de passe.
-     * @param identifiant Identifiant saisi
-     * @param motDePasse Mot de passe saisi
-     * @return Utilisateur correspondant ou null si échec
+     * Authentifie un utilisateur par identifiant et mot de passe.
      */
     public Utilisateur connecter(String identifiant, String motDePasse) {
         for (Utilisateur u : utilisateurs) {
@@ -29,5 +26,19 @@ public class LoginService {
             }
         }
         return null;
+    }
+
+    /**
+     * Ajoute un nouvel utilisateur à la liste.
+     */
+    public void ajouterUtilisateur(String identifiant, String motDePasse, String role) {
+        utilisateurs.add(new Utilisateur(identifiant, motDePasse, role));
+    }
+
+    /**
+     * Retourne tous les utilisateurs (optionnel).
+     */
+    public List<Utilisateur> getUtilisateurs() {
+        return utilisateurs;
     }
 }
